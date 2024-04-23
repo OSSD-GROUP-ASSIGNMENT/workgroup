@@ -151,6 +151,6 @@ if(isset($_GET['id'])) {
     echo "ID not provided.";
 }
 
-$stmt->close();
+
 $conn->close();
 ?>

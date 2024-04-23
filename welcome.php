@@ -10,6 +10,28 @@ if (!isset($_SESSION["email"])) {
 
 // Retrieve the user's email from the session
 $email = $_SESSION["email"];
+
+// Include the database connection file
+include 'database.php';
+
+// Retrieve the user's ID based on email
+$sql = "SELECT id FROM student WHERE email = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows == 1) {
+    $row = $result->fetch_assoc();
+    $user_id = $row['id'];
+} else {
+    echo "User ID not found.";
+    exit();
+}
+
+// Close the statement and database connection
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +94,7 @@ $email = $_SESSION["email"];
             <div class="dashboard-item">
                 <h3>Profile</h3>
                 <p>View and edit your profile</p>
-                <a href="profile.php" style="color: #fff; text-decoration: none;">Go to Profile</a>
+                <a href="edit.php?id=<?php echo $user_id; ?>" style="color: #fff; text-decoration: none;">Go to Profile</a>
             </div>
             <div class="dashboard-item">
                 <h3>Settings</h3>
